@@ -1,0 +1,339 @@
+{
+	"info": {
+		"_postman_id": "taller-parcial-spring-boot-jpa",
+		"name": "Taller Parcial Spring Boot JPA",
+		"description": "Colección de endpoints para el taller de API REST Spring Boot",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"correoElectronico\": \"juan.perez@email.com\",\n    \"contraseña\": \"Qwerty123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/signin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						}
+					}
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Test User\",\n    \"correoElectronico\": \"test@email.com\",\n    \"contraseña\": \"password123\",\n    \"direccion\": \"Test Address\",\n    \"metodoDePago\": \"Tarjeta de crédito\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/signup",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Productos (Públicos)",
+			"item": [
+				{
+					"name": "Listar Productos por Stock",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/productos/listar?stockMaximo=20",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"listar"
+							],
+							"query": [
+								{
+									"key": "stockMaximo",
+									"value": "20"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Comentarios (Públicos)",
+			"item": [
+				{
+					"name": "Listar Comentarios por Fecha",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/comentarios/listar?fechaDesde=2024-01-01",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"comentarios",
+								"listar"
+							],
+							"query": [
+								{
+									"key": "fechaDesde",
+									"value": "2024-01-01"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Carrito (Protegidos)",
+			"item": [
+				{
+					"name": "Crear Carrito",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/carrito/crear",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"carrito",
+								"crear"
+							]
+						}
+					}
+				},
+				{
+					"name": "Agregar Producto al Carrito",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"idProducto\": 1,\n    \"cantidad\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/carrito/1/agregar-producto",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"carrito",
+								"1",
+								"agregar-producto"
+							]
+						}
+					}
+				},
+				{
+					"name": "Listar Productos del Carrito",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/carrito/1/productos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"carrito",
+								"1",
+								"productos"
+							]
+						}
+					}
+				},
+				{
+					"name": "Mis Carritos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/carrito/mis-carritos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"carrito",
+								"mis-carritos"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Productos (Protegidos)",
+			"item": [
+				{
+					"name": "Todos los Productos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/productos/todos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"todos"
+							]
+						}
+					}
+				},
+				{
+					"name": "Producto por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/productos/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"1"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Usuario (Protegidos)",
+			"item": [
+				{
+					"name": "Ver Perfil",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/perfil",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								"perfil"
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}
